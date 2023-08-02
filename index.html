@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" charset="utf-8">
+    <title>加药计算</title>
+</head>
+
+<body>
+    <h2>⚠️ 输入的差值均为除去小数点后的整数</h2>
+    <!--可能窄了点但是问题不大-->
+    <hr>
+    <p>
+        AB进水量： <input type="number" id="AB" placeholder="请输入AB的总进水量"><br />
+        CD进水量： <input type="number" id="CD" placeholder="请输入CD的总进水量">
+    </p>
+    <hr>
+    <h2>加药计算部分</h2>
+    <h4>浓度按照混凝剂15%，助凝剂7.5%计算</h4>
+
+    <p>
+        请输入A池混凝剂与上个时段的差值：<input type="number" id="HN_adiff"><br />
+        请输入B池混凝剂与上个时段的差值：<input type="number" id="HN_bdiff"><br />
+        请输入C池混凝剂与上个时段的差值：<input type="number" id="HN_cdiff"><br />
+        请输入D池混凝剂与上个时段的差值：<input type="number" id="HN_ddiff"><br />
+    </p>
+    <p>
+        请输入A池助凝剂与上个时段的差值：<input type="number" id="ZN_adiff"><br />
+        请输入B池助凝剂与上个时段的差值：<input type="number" id="ZN_bdiff"><br />
+        请输入C池助凝剂与上个时段的差值：<input type="number" id="ZN_cdiff"><br />
+        请输入D池助凝剂与上个时段的差值：<input type="number" id="ZN_ddiff"><br />
+    </p>
+    <input type="button" style="width: 100px; height: 40px;" value="计算" onclick="do_cal()">
+    <h3>计算结果：</h3>
+    <textarea id="result" style="height: 40px;"></textarea><br />
+    <button onclick="copy()">复制到剪贴板</button>
+    <hr />
+    <p>
+        <h2>加氯计算部分</h2>
+        请输入预加氯AB流量计底数差：<input type="number" id="PreCL_ABdiff"><br />
+        请输入预加氯CD流量计底数差：<input type="number" id="PreCL_CDdiff"><br />
+        <br />
+        请输入主加氯AB流量计底数差：<input type="number" id="MainCL_ABdiff"><br />
+        请输入主加氯CD流量计底数差：<input type="number" id="MainCL_CDdiff"><br />
+        <input type="button" style="width: 100px; height: 40px;" value="计算" onclick="do_CLcal()">
+    <h3>计算结果：</h3>
+    <textarea id="result_" style="height: 40px;"></textarea><br />
+    <button onclick="copy_()">复制到剪贴板</button>
+    </p>
+</body>
+
+</html>
+<script type="text/javascript">
+    var hn_concen = 0.15;
+    var zn_concen = 0.075;
+    //夏天一般不会变，但是冬天会变
+    var CL_concen = 1.6;
+    //大概是密度一类的东西，原则上不会变
+
+
+
+    function do_cal() {
+        var ab = parseInt(document.getElementById("AB").value);
+        var cd = parseInt(document.getElementById("CD").value);
+
+        var hn_adiff = parseInt(document.getElementById("HN_adiff").value);
+        var hn_bdiff = parseInt(document.getElementById("HN_bdiff").value);
+        var hn_cdiff = parseInt(document.getElementById("HN_cdiff").value);
+        var hn_ddiff = parseInt(document.getElementById("HN_ddiff").value);
+
+        var zn_adiff = parseInt(document.getElementById("ZN_adiff").value);
+        var zn_bdiff = parseInt(document.getElementById("ZN_bdiff").value);
+        var zn_cdiff = parseInt(document.getElementById("ZN_cdiff").value);
+        var zn_ddiff = parseInt(document.getElementById("ZN_ddiff").value);
+        //计算结果
+        var hn_a = (hn_adiff * hn_concen * 2 * 10000 / ab).toFixed(2);
+        var hn_b = (hn_bdiff * hn_concen * 2 * 10000 / ab).toFixed(2);
+        var hn_c = (hn_cdiff * hn_concen * 2 * 10000 / cd).toFixed(2);
+        var hn_d = (hn_ddiff * hn_concen * 2 * 10000 / cd).toFixed(2);
+
+        var zn_a = (zn_adiff * zn_concen * 2 * 10000 / ab).toFixed(2);
+        var zn_b = (zn_bdiff * zn_concen * 2 * 10000 / ab).toFixed(2);
+        var zn_c = (zn_cdiff * zn_concen * 2 * 10000 / cd).toFixed(2);
+        var zn_d = (zn_ddiff * zn_concen * 2 * 10000 / cd).toFixed(2);
+
+        document.getElementById("result").value = hn_a + " " + hn_b + " " + hn_c + " " + hn_d + "\n" + zn_a + " " + zn_b + " " + zn_c + " " + zn_d;
+    }
+
+    function do_CLcal() {
+        //加氯部分
+        var ab = parseInt(document.getElementById("AB").value);
+        var cd = parseInt(document.getElementById("CD").value);
+        
+        var preCL_ABdiff = parseInt(document.getElementById("PreCL_ABdiff").value);
+        var preCL_CDdiff = parseInt(document.getElementById("PreCL_CDdiff").value);
+        
+        var mainCL_ABdiff = parseInt(document.getElementById("MainCL_ABdiff").value);
+        var mainCL_CDdiff = parseInt(document.getElementById("MainCL_CDdiff").value);
+
+        var preCL_AB = (preCL_ABdiff*CL_concen*1000/ab).toFixed(2);
+        var preCL_CD = (preCL_CDdiff*CL_concen*1000/cd).toFixed(2);
+
+        var mainCL_AB = (mainCL_ABdiff*CL_concen*1000/ab).toFixed(2);
+        var mainCL_CD = (mainCL_CDdiff*CL_concen*1000/cd).toFixed(2);
+
+        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " "+mainCL_CD;
+    }
+
+    function copy() {
+        document.getElementById("result").select();
+        document.execCommand('copy');
+        alert("复制加药数据成功！");
+    }
+
+    function copy_() {
+        document.getElementById("result_").select();
+        document.execCommand('copy');
+        alert("复制加氯数据成功！");
+    }
+</script>
