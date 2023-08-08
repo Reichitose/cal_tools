@@ -64,8 +64,8 @@
     function do_cal() {
         var ab = parseInt(document.getElementById("AB").value);
         var cd = parseInt(document.getElementById("CD").value);
-        hn_concen = parseInt(document.getElementById("hn_con").value)/100;
-        zn_concen = parseInt(document.getElementById("zn_con").value)/100;
+        hn_concen = parseFloat(document.getElementById("hn_con").value)/100;
+        zn_concen = parseFloat(document.getElementById("zn_con").value)/100;
 
         var hn_adiff = parseInt(document.getElementById("HN_adiff").value);
         var hn_bdiff = parseInt(document.getElementById("HN_bdiff").value);
