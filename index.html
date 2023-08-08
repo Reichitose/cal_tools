@@ -15,7 +15,7 @@
     </p>
     <hr>
     <h2>加药计算部分</h2>
-    <h4>浓度按照混凝剂15%，助凝剂7.5%计算</h4>
+    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="5" style="width: 50px;" id="zn_con">%计算</h4>
 
     <p>
         请输入A池混凝剂与上个时段的差值：<input type="number" id="HN_adiff"><br />
@@ -50,17 +50,22 @@
 
 </html>
 <script type="text/javascript">
-    var hn_concen = 0.15;
-    var zn_concen = 0.075;
-    //夏天一般不会变，但是冬天会变
+    var hn_concen
+    var zn_concen
+    //夏天一般不会变，但是冬天会变,然后就变了
     var CL_concen = 1.6;
     //大概是密度一类的东西，原则上不会变
+
+    //TODO 如果发生变更，开放窗口进行更改
+    // 2023.8.7 助凝剂浓度变更为5% 开放修改
 
 
 
     function do_cal() {
         var ab = parseInt(document.getElementById("AB").value);
         var cd = parseInt(document.getElementById("CD").value);
+        hn_concen = parseInt(document.getElementById("hn_con").value)/100;
+        zn_concen = parseInt(document.getElementById("zn_con").value)/100;
 
         var hn_adiff = parseInt(document.getElementById("HN_adiff").value);
         var hn_bdiff = parseInt(document.getElementById("HN_bdiff").value);
