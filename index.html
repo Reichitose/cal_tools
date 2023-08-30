@@ -9,6 +9,7 @@
     <h2>⚠️ 输入的差值均为除去小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
+    <button onclick="readCpy()">cpyy</button>
     <p>
         AB进水量： <input type="number" id="AB" placeholder="请输入AB的总进水量"><br />
         CD进水量： <input type="number" id="CD" placeholder="请输入CD的总进水量">
@@ -120,5 +121,57 @@
         document.getElementById("result_").select();
         document.execCommand('copy');
         alert("复制加氯数据成功！");
+    }
+
+    //2023.8.30  TODO添加新的关于剪贴板读取的内容
+
+    /*
+        一般而言 获得的数据如下
+        日期: 2023-8-30
+        时间:15:00
+        原水浊度(NTU):9
+        进厂水量(m³):13895
+        AB系列(m³):6975
+        CD系列(m³):6920
+        出厂水量(m³):15296
+        A系清水库液位(m):4.41
+        B系清水库液位(m):4.39
+        C系清水库液位(m):4.13
+        D系清水库液位(m):4.15
+        A系沉后浊度(NTU):0.75
+        B系沉后浊度(NTU):0.69
+        C系沉后浊度(NTU):0.80
+        D系沉后浊度(NTU):0.65
+        AB系滤后水浊度(NTU):0.10
+        CD系滤后浊度(NTU):0.10
+        出厂浊度(NTU):0.07
+        出厂水余氯(mg/L):0.55
+
+        需要使用到的正则表达如：
+        AB系列\(m³\):(\d+)
+        CD系列\(m³\):(\d+)
+    */
+    function readCpy(){
+        navigator.clipboard.readText()
+        .then((text)=>{
+            console.log('succ',text)
+            const pattern = /AB系列\(m³\):(\d+)/;
+            const pattern_ = /CD系列\(m³\):(\d+)/;
+            const match  = text.match(pattern)
+            const match_ = text.match(pattern_)
+            if(match){
+                const valAB = match[1]
+                const valCD = match_[1]
+                //将值注入
+                document.getElementById('AB').value = valAB
+                document.getElementById('CD').value = valCD
+
+            }else{
+                alert('读取失败，请检查剪贴板内容或权限')
+            }
+        }).catch((text)=>{
+            console.log('err',text)
+            alert('读取失败，请检查剪贴板内容或权限')
+        })
     }
 </script>
