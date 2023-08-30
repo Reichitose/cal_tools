@@ -9,14 +9,16 @@
     <h2>⚠️ 输入的差值均为除去小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
-    <button onclick="readCpy()">从剪贴板获取进水量</button>
+    <input type="text" id="hiddenTxt" placeholder="微信数据粘贴至此">
+    <button onclick="readCpy()">获取进水量</button>
     <p>
         AB进水量： <input type="number" id="AB" placeholder="请输入AB的总进水量"><br />
         CD进水量： <input type="number" id="CD" placeholder="请输入CD的总进水量">
     </p>
     <hr>
     <h2>加药计算部分</h2>
-    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="5" style="width: 50px;" id="zn_con">%计算</h4>
+    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="5"
+            style="width: 50px;" id="zn_con">%计算</h4>
 
     <p>
         请输入A池混凝剂与上个时段的差值：<input type="number" id="HN_adiff"><br />
@@ -36,13 +38,13 @@
     <button onclick="copy()">复制到剪贴板</button>
     <hr />
     <p>
-        <h2>加氯计算部分</h2>
-        请输入预加氯AB流量计底数差：<input type="number" id="PreCL_ABdiff"><br />
-        请输入预加氯CD流量计底数差：<input type="number" id="PreCL_CDdiff"><br />
-        <br />
-        请输入主加氯AB流量计底数差：<input type="number" id="MainCL_ABdiff"><br />
-        请输入主加氯CD流量计底数差：<input type="number" id="MainCL_CDdiff"><br />
-        <input type="button" style="width: 100px; height: 40px;" value="计算" onclick="do_CLcal()">
+    <h2>加氯计算部分</h2>
+    请输入预加氯AB流量计底数差：<input type="number" id="PreCL_ABdiff"><br />
+    请输入预加氯CD流量计底数差：<input type="number" id="PreCL_CDdiff"><br />
+    <br />
+    请输入主加氯AB流量计底数差：<input type="number" id="MainCL_ABdiff"><br />
+    请输入主加氯CD流量计底数差：<input type="number" id="MainCL_CDdiff"><br />
+    <input type="button" style="width: 100px; height: 40px;" value="计算" onclick="do_CLcal()">
     <h3>计算结果：</h3>
     <textarea id="result_" style="height: 40px;"></textarea><br />
     <button onclick="copy_()">复制到剪贴板</button>
@@ -65,8 +67,8 @@
     function do_cal() {
         var ab = parseInt(document.getElementById("AB").value);
         var cd = parseInt(document.getElementById("CD").value);
-        hn_concen = parseFloat(document.getElementById("hn_con").value)/100;
-        zn_concen = parseFloat(document.getElementById("zn_con").value)/100;
+        hn_concen = parseFloat(document.getElementById("hn_con").value) / 100;
+        zn_concen = parseFloat(document.getElementById("zn_con").value) / 100;
 
         var hn_adiff = parseInt(document.getElementById("HN_adiff").value);
         var hn_bdiff = parseInt(document.getElementById("HN_bdiff").value);
@@ -95,20 +97,20 @@
         //加氯部分
         var ab = parseInt(document.getElementById("AB").value);
         var cd = parseInt(document.getElementById("CD").value);
-        
+
         var preCL_ABdiff = parseInt(document.getElementById("PreCL_ABdiff").value);
         var preCL_CDdiff = parseInt(document.getElementById("PreCL_CDdiff").value);
-        
+
         var mainCL_ABdiff = parseInt(document.getElementById("MainCL_ABdiff").value);
         var mainCL_CDdiff = parseInt(document.getElementById("MainCL_CDdiff").value);
 
-        var preCL_AB = (preCL_ABdiff*CL_concen*1000/ab).toFixed(2);
-        var preCL_CD = (preCL_CDdiff*CL_concen*1000/cd).toFixed(2);
+        var preCL_AB = (preCL_ABdiff * CL_concen * 1000 / ab).toFixed(2);
+        var preCL_CD = (preCL_CDdiff * CL_concen * 1000 / cd).toFixed(2);
 
-        var mainCL_AB = (mainCL_ABdiff*CL_concen*1000/ab).toFixed(2);
-        var mainCL_CD = (mainCL_CDdiff*CL_concen*1000/cd).toFixed(2);
+        var mainCL_AB = (mainCL_ABdiff * CL_concen * 1000 / ab).toFixed(2);
+        var mainCL_CD = (mainCL_CDdiff * CL_concen * 1000 / cd).toFixed(2);
 
-        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " "+mainCL_CD;
+        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD;
     }
 
     function copy() {
@@ -151,27 +153,21 @@
         AB系列\(m³\):(\d+)
         CD系列\(m³\):(\d+)
     */
-    function readCpy(){
-        navigator.clipboard.readText()
-        .then((text)=>{
-            console.log('succ',text)
-            const pattern = /AB系列\(m³\):(\d+)/;
-            const pattern_ = /CD系列\(m³\):(\d+)/;
-            const match  = text.match(pattern)
-            const match_ = text.match(pattern_)
-            if(match){
-                const valAB = match[1]
-                const valCD = match_[1]
-                //将值注入
-                document.getElementById('AB').value = valAB
-                document.getElementById('CD').value = valCD
-
-            }else{
-                alert('读取失败，请检查剪贴板内容或权限')
-            }
-        }).catch((text)=>{
-            console.log('err',text)
+    function readCpy() {
+        const text = document.getElementById('hiddenTxt').value
+        console.log('succ', text)
+        const pattern = /AB系列\(m³\):(\d+)/;
+        const pattern_ = /CD系列\(m³\):(\d+)/;
+        const match = text.match(pattern)
+        const match_ = text.match(pattern_)
+        if (match) {
+            const valAB = match[1]
+            const valCD = match_[1]
+            //将值注入
+            document.getElementById('AB').value = valAB
+            document.getElementById('CD').value = valCD
+        } else {
             alert('读取失败，请检查剪贴板内容或权限')
-        })
+        }
     }
 </script>
