@@ -17,7 +17,7 @@
     </p>
     <hr>
     <h2>加药计算部分</h2>
-    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="5"
+    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="4"
             style="width: 50px;" id="zn_con">%计算</h4>
 
     <p>
@@ -53,16 +53,19 @@
 
 </html>
 <script type="text/javascript">
+    //----基于时间点发生的一些变化
+    //TODO 如果发生变更，开放窗口进行更改
+    // 2023.8.7 助凝剂浓度变更为5% 开放修改
+    //2023.8.30  添加新的关于剪贴板读取的内容
+    // 2023.9.23 变更助凝剂默认浓度为4%，修改待定
+
+
+    
     var hn_concen
     var zn_concen
     //夏天一般不会变，但是冬天会变,然后就变了
     var CL_concen = 1.6;
     //大概是密度一类的东西，原则上不会变
-
-    //TODO 如果发生变更，开放窗口进行更改
-    // 2023.8.7 助凝剂浓度变更为5% 开放修改
-
-
 
     function do_cal() {
         var ab = parseInt(document.getElementById("AB").value);
@@ -125,8 +128,6 @@
         alert("复制加氯数据成功！");
     }
 
-    //2023.8.30  TODO添加新的关于剪贴板读取的内容
-
     /*
         一般而言 获得的数据如下
         日期: 2023-8-30
@@ -167,7 +168,7 @@
             document.getElementById('AB').value = valAB
             document.getElementById('CD').value = valCD
         } else {
-            alert('读取失败，请检查剪贴板内容或权限')
+            alert('读取失败，请检查剪贴板内容')
         }
     }
 </script>
