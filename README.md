@@ -1,3 +1,6 @@
-cal_tools.github.io
-use for some daily cal
-## 有良心的就来中控给我磕个头
+gitpage 页面：https://reichitose.github.io/cal_tools/
+冷知识：工具用多了会忘掉具体计算方式
+## --更新内容--
+2023.8.7 助凝剂浓度变更为5% 开放修改
+2023.8.30  添加新的关于剪贴板读取的内容
+2023.9.23 变更助凝剂默认浓度为4%，修改待定
