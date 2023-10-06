@@ -3,16 +3,17 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" charset="utf-8">
     <title>加药加氯计算器</title>
+    <link rel="stylesheet" href="https://layui.itze.cn/layui-v2.6.8/layui/css/layui.css">
 </head>
 
 <body>
     <marquee style="font-size: 18px;background-color: aqua;">2023.9.23 混凝剂默认浓度修改为4% （使用有问题或者有改进想法可以提issue</marquee>
-    <h2>⚠️ 输入的差值均为除去小数点后的整数</h2>
+    <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
     <input type="text" id="hiddenTxt" placeholder="微信数据粘贴至此">
-    <button onclick="readCpy()">获取进水量</button>
-    <button onclick="clean()">清空</button>
+    <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="readCpy()">获取进水量</button>
+    <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="clean()">清空</button>
     <p>
         AB进水量： <input type="number" id="AB" placeholder="请输入AB的总进水量"><br />
         CD进水量： <input type="number" id="CD" placeholder="请输入CD的总进水量">
@@ -21,23 +22,24 @@
     <h2>加药计算部分</h2>
     <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="4"
             style="width: 50px;" id="zn_con">%计算</h4>
+    <hr>
 
     <p>
-        请输入A池混凝剂与上个时段的差值：<input type="number" id="HN_adiff"><br />
-        请输入B池混凝剂与上个时段的差值：<input type="number" id="HN_bdiff"><br />
-        请输入C池混凝剂与上个时段的差值：<input type="number" id="HN_cdiff"><br />
-        请输入D池混凝剂与上个时段的差值：<input type="number" id="HN_ddiff"><br />
+        A系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_adiff"><br />
+        B系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_bdiff"><br />
+        C系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_cdiff"><br />
+        D系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ddiff"><br />
     </p>
     <p>
-        请输入A池助凝剂与上个时段的差值：<input type="number" id="ZN_adiff"><br />
-        请输入B池助凝剂与上个时段的差值：<input type="number" id="ZN_bdiff"><br />
-        请输入C池助凝剂与上个时段的差值：<input type="number" id="ZN_cdiff"><br />
-        请输入D池助凝剂与上个时段的差值：<input type="number" id="ZN_ddiff"><br />
+        A系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_adiff"><br />
+        B系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_bdiff"><br />
+        C系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_cdiff"><br />
+        D系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ddiff"><br />
     </p>
-    <input type="button" style="width: 100px; height: 40px;" value="计算" onclick="do_cal()">
+    <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_cal()">
     <h3>计算结果：</h3>
     <textarea id="result" style="height: 40px;"></textarea><br />
-    <button onclick="copy()">复制到剪贴板</button>
+    <button onclick="copy()" class="layui-btn layui-btn-sm layui-btn-warm">复制到剪贴板</button>
     <hr />
     <p>
     <h2>加氯计算部分</h2>
@@ -46,11 +48,18 @@
     <br />
     请输入主加氯AB流量计底数差：<input type="number" id="MainCL_ABdiff"><br />
     请输入主加氯CD流量计底数差：<input type="number" id="MainCL_CDdiff"><br />
-    <input type="button" style="width: 100px; height: 40px;" value="计算" onclick="do_CLcal()">
+    <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_CLcal()">
     <h3>计算结果：</h3>
     <textarea id="result_" style="height: 40px;"></textarea><br />
-    <button onclick="copy_()">复制到剪贴板</button>
+    <button onclick="copy_()" class="layui-btn layui-btn-sm layui-btn-warm">复制到剪贴板</button>
     </p>
+    <br>
+    <br>
+    <br>
+    <hr class="layui-border-blue">
+    @reichitose
+    <br>
+    https://github.com/Reichitose/cal_tools
 </body>
 
 </html>
