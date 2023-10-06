@@ -12,6 +12,7 @@
     <hr>
     <input type="text" id="hiddenTxt" placeholder="微信数据粘贴至此">
     <button onclick="readCpy()">获取进水量</button>
+    <button onclick="clean()">清空</button>
     <p>
         AB进水量： <input type="number" id="AB" placeholder="请输入AB的总进水量"><br />
         CD进水量： <input type="number" id="CD" placeholder="请输入CD的总进水量">
@@ -57,8 +58,9 @@
     //----基于时间点发生的一些变化
     //TODO 如果发生变更，开放窗口进行更改
     // 2023.8.7 助凝剂浓度变更为5% 开放修改
-    //2023.8.30  添加新的关于剪贴板读取的内容
+    // 2023.8.30  添加新的关于剪贴板读取的内容
     // 2023.9.23 变更助凝剂默认浓度为4%，修改待定
+    // 2023.10.6 添加清空按钮，用于清空粘贴的微信数据源
 
 
 
@@ -171,5 +173,10 @@
         } else {
             alert('读取失败，请检查剪贴板内容')
         }
+    }
+
+    //清空
+    function clean(){
+        document.getElementById('hiddenTxt').value = ''
     }
 </script>
