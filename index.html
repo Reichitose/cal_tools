@@ -7,7 +7,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2023.10.7 混凝剂默认浓度修改为5% （使用有问题或者有改进想法可以提issue</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2023.12.29 加氯部分更换浓度 （使用有问题或者有改进想法可以提issue</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -61,6 +61,13 @@
     @reichitose
     <br>
     https://github.com/Reichitose/cal_tools
+    <hr>
+    <!-- 实验区 -->
+    <!-- 早些时候的数据:<input type="number" id="past"><br>
+    晚些时候的数据:<input type="number" id="now"><br>
+    <button onclick="doHN()">计算混凝剂班耗</button><br>
+    <textarea id="result_HN" style="height: 40px;"></textarea>
+     -->
 </body>
 
 </html>
@@ -72,13 +79,14 @@
     // 2023.9.23 变更助凝剂默认浓度为4%，修改待定
     // 2023.10.6 添加清空按钮，用于清空粘贴的微信数据源
     // 2023.10.7 助凝剂浓度更改为 5%
+    // 2023.12.29 CL_cocen 由1.6 变为 1 计算方式更改
 
 
 
     var hn_concen
     var zn_concen
     //夏天一般不会变，但是冬天会变,然后就变了
-    var CL_concen = 1.6;
+    var CL_concen = 1.0;
     //大概是密度一类的东西，原则上不会变
 
     function do_cal() {
@@ -189,5 +197,9 @@
     //清空
     function clean(){
         document.getElementById('hiddenTxt').value = ''
+    }
+
+    function doHN(){
+        var past = document.getElementById('past').value
     }
 </script>
