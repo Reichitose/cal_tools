@@ -7,7 +7,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2023.12.29 加氯部分更换浓度 （使用有问题或者有改进想法可以提issue</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2024.1.10 新的加氯计算，添加补氯部分 （使用有问题或者有改进想法可以提issue</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -44,11 +44,15 @@
     <hr />
     <p>
     <h2>加氯计算部分</h2>
+    <h4>有效氯为<input type="number" step="0.1" style="width: 40px;" id="effCL">%</h4>
     请输入预加氯AB流量计底数差：<input type="number" style="width: 60px;" id="PreCL_ABdiff"><br />
     请输入预加氯CD流量计底数差：<input type="number" style="width: 60px;" id="PreCL_CDdiff"><br />
     <br />
     请输入主加氯AB流量计底数差：<input type="number" style="width: 60px;" id="MainCL_ABdiff"><br />
     请输入主加氯CD流量计底数差：<input type="number" style="width: 60px;" id="MainCL_CDdiff"><br />
+    <br/>
+    请输入AB系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_ABdiff"><br />
+    请输入CD系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_CDdiff"><br />
     <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_CLcal()">
     <h3>计算结果：</h3>
     <textarea id="result_" style="height: 40px;"></textarea><br />
@@ -72,22 +76,31 @@
 
 </html>
 <script type="text/javascript">
-    //----基于时间点发生的一些变化
-    //TODO 如果发生变更，开放窗口进行更改
+    //----更新内容
+
     // 2023.8.7 助凝剂浓度变更为5% 开放修改
     // 2023.8.30  添加新的关于剪贴板读取的内容
     // 2023.9.23 变更助凝剂默认浓度为4%，修改待定
     // 2023.10.6 添加清空按钮，用于清空粘贴的微信数据源
     // 2023.10.7 助凝剂浓度更改为 5%
     // 2023.12.29 CL_cocen 由1.6 变为 1 计算方式更改
+    // 2024.1.10 浓度没了，变有效氯了，修改了氯的计算方式，添加了补氯的计算
 
+
+    // -- TODO LIST
+    // 班耗&总耗
 
 
     var hn_concen
     var zn_concen
     //夏天一般不会变，但是冬天会变,然后就变了
-    var CL_concen = 1.0;
+
+    //var CL_concen = 1.0;
     //大概是密度一类的东西，原则上不会变
+    //这玩意现在不用了，改有效氯了
+
+    var effCL
+    //有效氯
 
     function do_cal() {
         var ab = parseInt(document.getElementById("AB").value);
@@ -122,6 +135,7 @@
         //加氯部分
         var ab = parseInt(document.getElementById("AB").value);
         var cd = parseInt(document.getElementById("CD").value);
+        effCL = parseFloat(document.getElementById("effCL").value);
 
         var preCL_ABdiff = parseInt(document.getElementById("PreCL_ABdiff").value);
         var preCL_CDdiff = parseInt(document.getElementById("PreCL_CDdiff").value);
@@ -129,13 +143,19 @@
         var mainCL_ABdiff = parseInt(document.getElementById("MainCL_ABdiff").value);
         var mainCL_CDdiff = parseInt(document.getElementById("MainCL_CDdiff").value);
 
-        var preCL_AB = (preCL_ABdiff * CL_concen * 1000 / ab).toFixed(2);
-        var preCL_CD = (preCL_CDdiff * CL_concen * 1000 / cd).toFixed(2);
+        var addCL_ABdiff = parseInt(document.getElementById("addCL_ABdiff").value)
+        var addCL_CDdiff = parseInt(document.getElementById("addCL_CDdiff").value)
 
-        var mainCL_AB = (mainCL_ABdiff * CL_concen * 1000 / ab).toFixed(2);
-        var mainCL_CD = (mainCL_CDdiff * CL_concen * 1000 / cd).toFixed(2);
+        var preCL_AB = (preCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
+        var preCL_CD = (preCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
 
-        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD;
+        var mainCL_AB = (mainCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
+        var mainCL_CD = (mainCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
+
+        var addCL_AB = (addCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
+        var addCL_CD = (addCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
+
+        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " " + addCL_AB + " "+ addCL_CD;
     }
 
     function copy() {
