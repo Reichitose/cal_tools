@@ -15,8 +15,8 @@
     <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="readCpy()">获取进水量</button>
     <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="clean()">清空</button>
     <p>
-        AB进水量： <input type="number" id="AB" placeholder="请输入AB的总进水量"><br />
-        CD进水量： <input type="number" id="CD" placeholder="请输入CD的总进水量">
+        一二系列进水量： <input type="number" id="12" placeholder="请输入一二系列的总进水量"><br />
+        三四系列进水量： <input type="number" id="34" placeholder="请输入三四系列的总进水量">
     </p>
     <hr>
     <h2>加药计算部分</h2>
@@ -86,6 +86,7 @@
     // 2023.12.29 CL_cocen 由1.6 变为 1 计算方式更改
     // 2024.1.10 浓度没了，变有效氯了，修改了氯的计算方式，添加了补氯的计算
     // 2024.1.15 修改了微信数据新格式后的正则适配
+    // 2024.1.21 修改相关文本
 
 
     // -- TODO LIST
@@ -104,8 +105,8 @@
     //有效氯
 
     function do_cal() {
-        var ab = parseInt(document.getElementById("AB").value);
-        var cd = parseInt(document.getElementById("CD").value);
+        var ab = parseInt(document.getElementById("12").value);
+        var cd = parseInt(document.getElementById("34").value);
         hn_concen = parseFloat(document.getElementById("hn_con").value) / 100;
         zn_concen = parseFloat(document.getElementById("zn_con").value) / 100;
 
@@ -134,8 +135,8 @@
 
     function do_CLcal() {
         //加氯部分
-        var ab = parseInt(document.getElementById("AB").value);
-        var cd = parseInt(document.getElementById("CD").value);
+        var ab = parseInt(document.getElementById("12").value);
+        var cd = parseInt(document.getElementById("34").value);
         effCL = parseFloat(document.getElementById("effCL").value);
 
         var preCL_ABdiff = parseInt(document.getElementById("PreCL_ABdiff").value);
@@ -207,8 +208,8 @@
             const valAB = match[1]
             const valCD = match_[1]
             //将值注入
-            document.getElementById('AB').value = valAB
-            document.getElementById('CD').value = valCD
+            document.getElementById('12').value = valAB
+            document.getElementById('34').value = valCD
         } else {
             alert('读取失败，请检查剪贴板内容')
         }
