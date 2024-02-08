@@ -18,3 +18,5 @@ gitpage 页面：https://reichitose.github.io/cal_tools/
 2024.1.15 修改了微信数据新格式后的正则适配
 
 2024.1.21 修改相关文本
+
+2024.2.8 修改混凝助凝浓度
