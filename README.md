@@ -20,3 +20,5 @@ gitpage 页面：https://reichitose.github.io/cal_tools/
 2024.1.21 修改相关文本
 
 2024.2.8 修改混凝助凝浓度
+
+2024.4.17 修改助凝剂浓度
