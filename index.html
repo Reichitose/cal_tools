@@ -7,7 +7,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2024.2.8 修改混凝助凝浓度 （使用有问题或者有改进想法可以提issue</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2024.5.21 将补氯一二系列分开计算 （使用有问题或者有改进想法可以提issue</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -45,14 +45,15 @@
     <p>
     <h2>加氯计算部分</h2>
     <h4>有效氯为<input type="number" step="0.1" style="width: 40px;" id="effCL">%</h4>
-    请输入预加氯AB流量计底数差：<input type="number" style="width: 60px;" id="PreCL_ABdiff"><br />
-    请输入预加氯CD流量计底数差：<input type="number" style="width: 60px;" id="PreCL_CDdiff"><br />
+    请输入预加氯一二流量计底数差：<input type="number" style="width: 60px;" id="PreCL_ABdiff"><br />
+    请输入预加氯三四流量计底数差：<input type="number" style="width: 60px;" id="PreCL_CDdiff"><br />
     <br />
-    请输入主加氯AB流量计底数差：<input type="number" style="width: 60px;" id="MainCL_ABdiff"><br />
-    请输入主加氯CD流量计底数差：<input type="number" style="width: 60px;" id="MainCL_CDdiff"><br />
+    请输入主加氯一二流量计底数差：<input type="number" style="width: 60px;" id="MainCL_ABdiff"><br />
+    请输入主加氯三四流量计底数差：<input type="number" style="width: 60px;" id="MainCL_CDdiff"><br />
     <br/>
-    请输入AB系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_ABdiff"><br />
-    请输入CD系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_CDdiff"><br />
+    请输入一系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_Adiff"><br />
+    请输入二系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_Bdiff"><br />
+    请输入三四系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_CDdiff"><br />
     <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_CLcal()">
     <h3>计算结果：</h3>
     <textarea id="result_" style="height: 40px;"></textarea><br />
@@ -89,6 +90,7 @@
     // 2024.1.21 修改相关文本
     // 2024.2.8 修改混凝助凝浓度
     // 2024.4.17 修改助凝剂浓度
+    // 2024.5.21 将补氯一二系列分开计算
 
 
     // -- TODO LIST
@@ -147,7 +149,8 @@
         var mainCL_ABdiff = parseInt(document.getElementById("MainCL_ABdiff").value);
         var mainCL_CDdiff = parseInt(document.getElementById("MainCL_CDdiff").value);
 
-        var addCL_ABdiff = parseInt(document.getElementById("addCL_ABdiff").value)
+        var addCL_Adiff = parseInt(document.getElementById("addCL_Adiff").value)
+        var addCL_Bdiff = parseInt(document.getElementById("addCL_Bdiff").value)
         var addCL_CDdiff = parseInt(document.getElementById("addCL_CDdiff").value)
 
         var preCL_AB = (preCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
@@ -156,10 +159,11 @@
         var mainCL_AB = (mainCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
         var mainCL_CD = (mainCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
 
-        var addCL_AB = (addCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
+        var addCL_A = (addCL_Adiff * effCL * 0.1 * 1000 / ab).toFixed(2);
+        var addCL_B = (addCL_Bdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
         var addCL_CD = (addCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
 
-        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " " + addCL_AB + " "+ addCL_CD;
+        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " " + addCL_A + " " + addCL_B + " "+ addCL_CD;
     }
 
     function copy() {

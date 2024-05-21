@@ -22,3 +22,5 @@ gitpage 页面：https://reichitose.github.io/cal_tools/
 2024.2.8 修改混凝助凝浓度
 
 2024.4.17 修改助凝剂浓度
+
+2024.5.21 将补氯一二系列分开计算
