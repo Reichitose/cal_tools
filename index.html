@@ -53,7 +53,9 @@
     <br/>
     请输入一系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_Adiff"><br />
     请输入二系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_Bdiff"><br />
-    请输入三四系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_CDdiff"><br />
+    请输入三系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_Cdiff"><br />
+    请输入四系补氯流量计底数差：<input type="number" style="width: 60px;" value="0" id="addCL_Ddiff"><br />
+
     <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_CLcal()">
     <h3>计算结果：</h3>
     <textarea id="result_" style="height: 40px;"></textarea><br />
@@ -151,7 +153,8 @@
 
         var addCL_Adiff = parseInt(document.getElementById("addCL_Adiff").value)
         var addCL_Bdiff = parseInt(document.getElementById("addCL_Bdiff").value)
-        var addCL_CDdiff = parseInt(document.getElementById("addCL_CDdiff").value)
+        var addCL_Cdiff = parseInt(document.getElementById("addCL_Cdiff").value)
+        var addCL_Ddiff = parseInt(document.getElementById("addCL_Ddiff").value)
 
         var preCL_AB = (preCL_ABdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
         var preCL_CD = (preCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
@@ -161,9 +164,10 @@
 
         var addCL_A = (addCL_Adiff * effCL * 0.1 * 1000 / ab).toFixed(2);
         var addCL_B = (addCL_Bdiff * effCL * 0.1 * 1000 / ab).toFixed(2);
-        var addCL_CD = (addCL_CDdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
+        var addCL_C = (addCL_Cdiff * effCL * 0.1 * 1000 / cd).toFixed(2);
+        var addCL_D = (addCL_Ddiff * effCL * 0.1 * 1000 / cd).toFixed(2);
 
-        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " " + addCL_A + " " + addCL_B + " "+ addCL_CD;
+        document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " " + addCL_A + " " + addCL_B + " " + addCL_C+ " " + addCL_D;
     }
 
     function copy() {
