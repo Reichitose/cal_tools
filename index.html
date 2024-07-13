@@ -8,7 +8,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2024.7.1占位 （使用有问题或者有改进想法可以提issue</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2024.7.13 更新二期加药和加氯计算方式，重构正则识别 （使用有问题或者有改进想法可以提issue</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -22,7 +22,8 @@
     </p>
     <hr>
     <h2>加药计算部分</h2>
-    <h4>浓度按照混凝剂<input type="number" value="10" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="5"
+    <h3>一期</h3>
+    <h4>浓度按照混凝剂<input type="number" value="18" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="7.5"
             style="width: 50px;" id="zn_con">%计算</h4>
     <hr>
 
@@ -39,6 +40,11 @@
         C系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_cdiff"><br />
         D系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ddiff"><br />
     </p>
+    <h3>二期</h3>
+    <h4>浓度按照混凝剂<input type="number" value="10" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
+        style="width: 50px;" id="zn_con2">%计算</h4>
+    二期一系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff"><br />
+    二期一系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ediff"><br />
     <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_cal()">
     <h3>计算结果：</h3>
     <textarea id="result" style="height: 40px;"></textarea><br />
@@ -101,6 +107,7 @@
     // 2024.4.17 修改助凝剂浓度
     // 2024.5.21 将补氯一二系列分开计算
     // 2024.7.1 占位
+    // 2024.7.13 更新二期加药和加氯计算方式，重构正则识别
 
 
     // -- TODO LIST
@@ -122,30 +129,39 @@
     function do_cal() {
         var ab = parseInt(document.getElementById("12").value);
         var cd = parseInt(document.getElementById("34").value);
+        var ef = parseInt(document.getElementById("56").value);
         hn_concen = parseFloat(document.getElementById("hn_con").value) / 100;
+        hn_concen2 = parseFloat(document.getElementById("hn_con2").value) / 100;
+
         zn_concen = parseFloat(document.getElementById("zn_con").value) / 100;
+        zn_concen2 = parseFloat(document.getElementById("zn_con2").value) / 100;
 
         var hn_adiff = parseInt(document.getElementById("HN_adiff").value);
         var hn_bdiff = parseInt(document.getElementById("HN_bdiff").value);
         var hn_cdiff = parseInt(document.getElementById("HN_cdiff").value);
         var hn_ddiff = parseInt(document.getElementById("HN_ddiff").value);
+        var hn_ediff = parseInt(document.getElementById("HN_ediff").value);
 
         var zn_adiff = parseInt(document.getElementById("ZN_adiff").value);
         var zn_bdiff = parseInt(document.getElementById("ZN_bdiff").value);
         var zn_cdiff = parseInt(document.getElementById("ZN_cdiff").value);
         var zn_ddiff = parseInt(document.getElementById("ZN_ddiff").value);
+        var zn_ediff = parseInt(document.getElementById("ZN_ediff").value);
         //计算结果
         var hn_a = (hn_adiff * hn_concen * 2 * 10000 / ab).toFixed(2);
         var hn_b = (hn_bdiff * hn_concen * 2 * 10000 / ab).toFixed(2);
         var hn_c = (hn_cdiff * hn_concen * 2 * 10000 / cd).toFixed(2);
         var hn_d = (hn_ddiff * hn_concen * 2 * 10000 / cd).toFixed(2);
+        var hn_e = (hn_ediff * hn_concen2  * 10000 / ef).toFixed(2);
+
 
         var zn_a = (zn_adiff * zn_concen * 2 * 10000 / ab).toFixed(2);
         var zn_b = (zn_bdiff * zn_concen * 2 * 10000 / ab).toFixed(2);
         var zn_c = (zn_cdiff * zn_concen * 2 * 10000 / cd).toFixed(2);
         var zn_d = (zn_ddiff * zn_concen * 2 * 10000 / cd).toFixed(2);
+        var zn_e = (zn_ediff * zn_concen2  * 10000 / ef).toFixed(2);
 
-        document.getElementById("result").value = hn_a + " " + hn_b + " " + hn_c + " " + hn_d + "\n" + zn_a + " " + zn_b + " " + zn_c + " " + zn_d;
+        document.getElementById("result").value = hn_a + " " + hn_b + " " + hn_c + " " + hn_d + "\n" + zn_a + " " + zn_b + " " + zn_c + " " + zn_d+ "\n" + hn_e + " " + zn_e;
     }
 
     function do_CLcal() {
@@ -177,12 +193,12 @@
         var preCL_AB = (preCL_ABdiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var preCL_CD = (preCL_CDdiff * effCL1 * 0.1 * 1000 / cd).toFixed(2);
 
-        var preCL_2 = (preCL_2diff * effCL2 * 10 / ef).toFixed(2);
+        var preCL_2 = (preCL_2diff * effCL2 * 100 / ef).toFixed(2);
 
         var mainCL_AB = (mainCL_ABdiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var mainCL_CD = (mainCL_CDdiff * effCL1 * 0.1 * 1000 / cd).toFixed(2);
 
-        var mainCL_2 = (mainCL_2diff * effCL2 * 10/ ef).toFixed(2);
+        var mainCL_2 = (mainCL_2diff * effCL2 * 100/ ef).toFixed(2);
 
         var addCL_A = (addCL_Adiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var addCL_B = (addCL_Bdiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
@@ -208,42 +224,57 @@
 
     /*
         一般而言 获得的数据如下
-        日期: 2024-1-15
-        时间: 24:00
-        原水浊度(NTU): 4
-        进厂水(m³):16680
-        一二系列(m³):8360
-        三四系列(m³):8320
-        出厂水量(m³):17512
-        1# 清水库液位(m):4.81
-        2# 清水库液位(m):4.81
-        3# 清水库液位(m):4.50
-        4# 清水库液位(m):4.50
-        一系沉后浊度(NTU): 0.80
-        二系沉后浊度(NTU): 0.66
-        三系沉后浊度(NTU): 0.70
-        四系沉后浊度(NTU): 0.15
-        一二系滤后水浊度(NTU):0.17
-        三四系滤后水浊度(NTU):0.25
-        出厂浊度(NTU):0.27
-        出厂水余氯(mg/L):0.44
-        需要使用到的正则表达如：
-        一二系列\(m³\):(\d+)
-        三四系列\(m³\):(\d+)
+        2024-7-13-21:00
+
+        原水浊度：
+        【一期：14NTU】
+        【二期：11NTU】
+        进厂水量：16107m³
+        【1系2系：7185m³】
+        【3系4系：7145m³】
+        【5系6系：1777m³】
+        【7系8系：0m³】
+
+        沉后浊度：
+        【1系：0.91NTU】
+        【2系：0.61NTU】
+        【3系：0.60NTU】
+        【4系：0.50NTU】
+        【5-1系：0.53NTU】
+        【5-2系：0NTU】
+        滤后浊度：
+        【1系2系：0.10NTU】
+        【3系4系：0.13NTU】
+        【5系6系：0.09NTU】
+        【7系8系：0.00NTU】
+        清水库液位：
+        【1# ：3.62m】【2# ：3.62m】
+        【3# ：3.35m】【4# ：3.33m】
+        【5# ：3.32m】【6# ：0.00m】
+        【7# ：0.00m】【8# ：0.00m】
+        清水库出水浊度：
+        【5#：0.05NTU】
+        清水库出水余氯：
+        【5#：0.44mg/L】
+
+        出厂水量：16853m³
+        出厂浊度：【一期：0.07NTU】
+        出厂余氯：【一期：0.44mg/L】
     */
     function readCpy() {
         const text = document.getElementById('hiddenTxt').value
         console.log('succ', text)
-        const pattern = /一二系列\(m³\):(\d+)/;
-        const pattern_ = /三四系列\(m³\):(\d+)/;
-        const pattern__ = /五六系列\(m³\):(\d+)/;
+        const pattern = /(?<=1系2系：)\d+(?=m³)/g;
+        const pattern_ = /(?<=3系4系：)\d+(?=m³)/g;
+        const pattern__ = /(?<=5系6系：)\d+(?=m³)/g;
         const match = text.match(pattern)
         const match_ = text.match(pattern_)
         const match__ = text.match(pattern__)
         if (match) {
-            const valAB = match[1]
-            const valCD = match_[1]
-            const valEF = match__[1]
+            const valAB = match
+            const valCD = match_
+            const valEF = match__
+
             //将值注入
             document.getElementById('12').value = valAB
             document.getElementById('34').value = valCD
