@@ -271,9 +271,9 @@
         const match_ = text.match(pattern_)
         const match__ = text.match(pattern__)
         if (match) {
-            const valAB = match
-            const valCD = match_
-            const valEF = match__
+            const valAB = match[0]
+            const valCD = match_[0]
+            const valEF = match__[0]
 
             //将值注入
             document.getElementById('12').value = valAB
