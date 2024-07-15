@@ -230,9 +230,9 @@
         【一期：14NTU】
         【二期：11NTU】
         进厂水量：16107m³
-        【1-2系：7185m³】
-        【3-4系：7145m³】
-        【5-6系：1777m³】
+        【1-2系：7185】
+        【3-4系：7145】
+        【5-6系：1777】
         【7-8系：0m³】
 
         沉后浊度：
@@ -264,9 +264,9 @@
     function readCpy() {
         const text = document.getElementById('hiddenTxt').value
         console.log('succ', text)
-        const pattern = /(?<=1-2系：)\d+(?=m³)/g;
-        const pattern_ = /(?<=3-4系：)\d+(?=m³)/g;
-        const pattern__ = /(?<=5-6系：)\d+(?=m³)/g;
+        const pattern = /(?<=1-2系：)\d+/g;
+        const pattern_ = /(?<=3-4系：)\d+/g;
+        const pattern__ = /(?<=5-6系：)\d+/g;
         const match = text.match(pattern)
         const match_ = text.match(pattern_)
         const match__ = text.match(pattern__)
