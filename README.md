@@ -28,3 +28,5 @@ gitpage 页面：https://reichitose.github.io/cal_tools/
 2024.7.1 占位
 
 2024.7.13 更新二期加药和加氯计算方式，重构正则识别
+
+2024.9.11 更新二期加药

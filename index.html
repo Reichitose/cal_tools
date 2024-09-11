@@ -8,7 +8,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2024.7.13 更新二期加药和加氯计算方式，重构正则识别 （使用有问题或者有改进想法可以提issue</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2024.9.11 更新二期加药 （使用有问题或者有改进想法可以提issue</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -18,12 +18,13 @@
     <p>
         一二系列进水量： <input type="number" id="12" placeholder="请输入一二系列的总进水量"><br />
         三四系列进水量： <input type="number" id="34" placeholder="请输入三四系列的总进水量"><br />
-        五六系列进水量： <input type="number" id="56" placeholder="请输入五六系列的总进水量">
+        五系列进水量： <input type="number" id="5" placeholder="请输入五系列的总进水量"><br/>
+        六系列进水量： <input type="number" id="6" placeholder="请输入六系列的总进水量">
     </p>
     <hr>
     <h2>加药计算部分</h2>
     <h3>一期</h3>
-    <h4>浓度按照混凝剂<input type="number" value="18" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="7.5"
+    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="10"
             style="width: 50px;" id="zn_con">%计算</h4>
     <hr>
 
@@ -41,10 +42,19 @@
         D系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ddiff"><br />
     </p>
     <h3>二期</h3>
-    <h4>浓度按照混凝剂<input type="number" value="10" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
+    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
         style="width: 50px;" id="zn_con2">%计算</h4>
-    二期一系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff"><br />
-    二期一系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ediff"><br />
+    5-1混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff1"><br />
+    5-2混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff2"><br />
+    6-1混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_fdiff1"><br />
+    6-2混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_fdiff2"><br />
+    <br/>
+
+    5-1助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ediff1"><br />
+    5-2助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ediff2"><br />
+    6-1助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_fdiff1"><br />
+    6-2助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_fdiff2"><br />
+
     <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_cal()">
     <h3>计算结果：</h3>
     <textarea id="result" style="height: 40px;"></textarea><br />
@@ -108,6 +118,7 @@
     // 2024.5.21 将补氯一二系列分开计算
     // 2024.7.1 占位
     // 2024.7.13 更新二期加药和加氯计算方式，重构正则识别
+    // 2024.9.11 更新二期加药
 
 
     // -- TODO LIST
@@ -129,7 +140,9 @@
     function do_cal() {
         var ab = parseInt(document.getElementById("12").value);
         var cd = parseInt(document.getElementById("34").value);
-        var ef = parseInt(document.getElementById("56").value);
+        var e = parseInt(document.getElementById("5").value);
+        var f = parseInt(document.getElementById("6").value);
+
         hn_concen = parseFloat(document.getElementById("hn_con").value) / 100;
         hn_concen2 = parseFloat(document.getElementById("hn_con2").value) / 100;
 
@@ -140,28 +153,45 @@
         var hn_bdiff = parseInt(document.getElementById("HN_bdiff").value);
         var hn_cdiff = parseInt(document.getElementById("HN_cdiff").value);
         var hn_ddiff = parseInt(document.getElementById("HN_ddiff").value);
-        var hn_ediff = parseInt(document.getElementById("HN_ediff").value);
+        var hn_ediff1 = parseInt(document.getElementById("HN_ediff1").value);
+        var hn_ediff2 = parseInt(document.getElementById("HN_ediff2").value);
+        var hn_fdiff1 = parseInt(document.getElementById("HN_fdiff1").value);
+        var hn_fdiff2 = parseInt(document.getElementById("HN_fdiff2").value);
+
+
 
         var zn_adiff = parseInt(document.getElementById("ZN_adiff").value);
         var zn_bdiff = parseInt(document.getElementById("ZN_bdiff").value);
         var zn_cdiff = parseInt(document.getElementById("ZN_cdiff").value);
         var zn_ddiff = parseInt(document.getElementById("ZN_ddiff").value);
-        var zn_ediff = parseInt(document.getElementById("ZN_ediff").value);
+        var zn_ediff1 = parseInt(document.getElementById("ZN_ediff1").value);
+        var zn_ediff2= parseInt(document.getElementById("ZN_ediff2").value);
+        var zn_fdiff1 = parseInt(document.getElementById("ZN_fdiff1").value);
+        var zn_fdiff2 = parseInt(document.getElementById("ZN_fdiff2").value);
+
         //计算结果
         var hn_a = (hn_adiff * hn_concen * 2 * 10000 / ab).toFixed(2);
         var hn_b = (hn_bdiff * hn_concen * 2 * 10000 / ab).toFixed(2);
         var hn_c = (hn_cdiff * hn_concen * 2 * 10000 / cd).toFixed(2);
         var hn_d = (hn_ddiff * hn_concen * 2 * 10000 / cd).toFixed(2);
-        var hn_e = (hn_ediff * hn_concen2  * 10000 / ef).toFixed(2);
+        var hn_e1 = (hn_ediff1 * hn_concen2 * 2  * 10000 / e).toFixed(2);
+        var hn_e2 = (hn_ediff2 * hn_concen2 * 2 * 10000 / e).toFixed(2);
+
+        var hn_f1 = (hn_fdiff1 * hn_concen2 * 2  * 10000 / f).toFixed(2);
+        var hn_f2 = (hn_fdiff2 * hn_concen2 * 2  * 10000 / f).toFixed(2);
+
 
 
         var zn_a = (zn_adiff * zn_concen * 2 * 10000 / ab).toFixed(2);
         var zn_b = (zn_bdiff * zn_concen * 2 * 10000 / ab).toFixed(2);
         var zn_c = (zn_cdiff * zn_concen * 2 * 10000 / cd).toFixed(2);
         var zn_d = (zn_ddiff * zn_concen * 2 * 10000 / cd).toFixed(2);
-        var zn_e = (zn_ediff * zn_concen2  * 10000 / ef).toFixed(2);
+        var zn_e1 = (zn_ediff1 * zn_concen2 * 2  * 10000 / e).toFixed(2);
+        var zn_e2 = (zn_ediff2 * zn_concen2 * 2  * 10000 / e).toFixed(2);
+        var zn_f1 = (zn_fdiff1 * zn_concen2 * 2 * 10000 / f).toFixed(2);
+        var zn_f2 = (zn_fdiff2 * zn_concen2 * 2  * 10000 / f).toFixed(2);
 
-        document.getElementById("result").value = hn_a + " " + hn_b + " " + hn_c + " " + hn_d + "\n" + zn_a + " " + zn_b + " " + zn_c + " " + zn_d+ "\n" + hn_e + " " + zn_e;
+        document.getElementById("result").value = "一期：\n" +hn_a + " " + hn_b + " " + hn_c + " " + hn_d + "\n" + zn_a + " " + zn_b + " " + zn_c + " " + zn_d+ "\n" + "二期：\n" + hn_e1 + " " + hn_e2 + " " + hn_f1 + " " + hn_f2 + "\n"+ zn_e1 + " " + zn_e2 + " " + zn_f1 + " " + zn_f2;
     }
 
     function do_CLcal() {
