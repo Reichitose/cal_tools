@@ -77,8 +77,11 @@
 
     <h3>二期</h3>
     <h4>二期有效氯为<input type="number" step="0.1" style="width: 40px;" id="effCL2">%</h4>
-    二期预加氯流量计底数差：<input type="number" style="width: 60px;" id="PreCL_2diff"><br />
-    二期主加氯流量计底数差：<input type="number" style="width: 60px;" id="MainCL_2diff"><br />
+    5系列预加氯流量计底数差：<input type="number" style="width: 60px;" id="PreCL_Ediff"><br />
+    6系列预加氯流量计底数差：<input type="number" style="width: 60px;" id="PreCL_Fdiff"><br />
+    <br/>
+    5系列主加氯流量计底数差：<input type="number" style="width: 60px;" id="MainCL_Ediff"><br />
+    6系列主加氯流量计底数差：<input type="number" style="width: 60px;" id="MainCL_Fdiff"><br />
     <input type="button" class="layui-btn layui-btn-lg layui-btn-normal" value="计算" onclick="do_CLcal()">
     <h3>计算结果：</h3>
     <textarea id="result_" style="height: 40px;"></textarea><br />
@@ -119,6 +122,7 @@
     // 2024.7.1 占位
     // 2024.7.13 更新二期加药和加氯计算方式，重构正则识别
     // 2024.9.11 更新二期加药
+    // 2024.9.12 更新了二期加氯，重构了识别（现在水量会自动被分配到56，更换了加氯数据输出的格式
 
 
     // -- TODO LIST
@@ -198,7 +202,9 @@
         //加氯部分
         var ab = parseInt(document.getElementById("12").value);
         var cd = parseInt(document.getElementById("34").value);
-        var ef = parseInt(document.getElementById("56").value);
+        var e = parseInt(document.getElementById("5").value);
+        var f = parseInt(document.getElementById("6").value);
+
         effCL1 = parseFloat(document.getElementById("effCL1").value);
         effCL2 = parseFloat(document.getElementById("effCL2").value);
 
@@ -208,12 +214,14 @@
         var preCL_ABdiff = parseInt(document.getElementById("PreCL_ABdiff").value);
         var preCL_CDdiff = parseInt(document.getElementById("PreCL_CDdiff").value);
 
-        var preCL_2diff = parseInt(document.getElementById("PreCL_2diff").value);
+        var preCL_Ediff = parseInt(document.getElementById("PreCL_Ediff").value);
+        var preCL_Fdiff = parseInt(document.getElementById("PreCL_Fdiff").value);
 
         var mainCL_ABdiff = parseInt(document.getElementById("MainCL_ABdiff").value);
         var mainCL_CDdiff = parseInt(document.getElementById("MainCL_CDdiff").value);
 
-        var mainCL_2diff = parseInt(document.getElementById("MainCL_2diff").value);
+        var mainCL_Ediff = parseInt(document.getElementById("MainCL_Ediff").value);
+        var mainCL_Fdiff = parseInt(document.getElementById("MainCL_Fdiff").value);
 
         var addCL_Adiff = parseInt(document.getElementById("addCL_Adiff").value)
         var addCL_Bdiff = parseInt(document.getElementById("addCL_Bdiff").value)
@@ -223,21 +231,23 @@
         var preCL_AB = (preCL_ABdiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var preCL_CD = (preCL_CDdiff * effCL1 * 0.1 * 1000 / cd).toFixed(2);
 
-        var preCL_2 = (preCL_2diff * effCL2 * 100 / ef).toFixed(2);
+        var preCL_E = (preCL_Ediff * effCL2 * 100 / e).toFixed(2);
+        var preCL_F = (preCL_Fdiff * effCL2 * 100 / f).toFixed(2);
 
         var mainCL_AB = (mainCL_ABdiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var mainCL_CD = (mainCL_CDdiff * effCL1 * 0.1 * 1000 / cd).toFixed(2);
 
-        var mainCL_2 = (mainCL_2diff * effCL2 * 100/ ef).toFixed(2);
+        var mainCL_E = (mainCL_Ediff * effCL2 * 100/ e).toFixed(2);
+        var mainCL_F = (mainCL_Fdiff * effCL2 * 100/ f).toFixed(2);
 
         var addCL_A = (addCL_Adiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var addCL_B = (addCL_Bdiff * effCL1 * 0.1 * 1000 / ab).toFixed(2);
         var addCL_C = (addCL_Cdiff * effCL1 * 0.1 * 1000 / cd).toFixed(2);
         var addCL_D = (addCL_Ddiff * effCL1 * 0.1 * 1000 / cd).toFixed(2);
         if(openAdd == true){
-            document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " " + addCL_A + " " + addCL_B + " " + addCL_C+ " " + addCL_D + "\n" + preCL_2 + " " +  mainCL_2;
+            document.getElementById("result_").value = "前加氯：\n"+preCL_AB + " " + preCL_CD + " " + preCL_E + " " + preCL_F + "\n主加氯：\n" + mainCL_AB + " " + mainCL_CD + " " + mainCL_E + " " + mainCL_F + "\n补氯：\n" + addCL_A + " " + addCL_B + " " + addCL_C+ " " + addCL_D;
         }else{
-            document.getElementById("result_").value = preCL_AB + " " + preCL_CD + " " + mainCL_AB + " " + mainCL_CD + " "  + "\n" + preCL_2 + " " +  mainCL_2;
+            document.getElementById("result_").value = "前加氯：\n"+preCL_AB + " " + preCL_CD + " " + preCL_E + " " + preCL_F + "\n主加氯：\n" + mainCL_AB + " " + mainCL_CD + " " + mainCL_E + " " + mainCL_F;
         }
     }
     function copy() {
@@ -293,10 +303,12 @@
     */
     function readCpy() {
         const text = document.getElementById('hiddenTxt').value
+        
         console.log('succ', text)
-        const pattern = /(?<=1-2系：)\d+/g;
-        const pattern_ = /(?<=3-4系：)\d+/g;
-        const pattern__ = /(?<=5-6系：)\d+/g;
+        const pattern = /(?<=【1-2系：】)\d+/g;
+        const pattern_ = /(?<=【3-4系：】)\d+/g;
+        const pattern__ = /(?<=【5-6系：】)\d+/g;
+        console.log(pattern + pattern_ + pattern__)
         const match = text.match(pattern)
         const match_ = text.match(pattern_)
         const match__ = text.match(pattern__)
@@ -308,7 +320,9 @@
             //将值注入
             document.getElementById('12').value = valAB
             document.getElementById('34').value = valCD
-            document.getElementById('56').value = valEF
+            document.getElementById('5').value = valEF/2
+            document.getElementById('6').value = valEF/2
+            
         } else {
             alert('读取失败，请检查剪贴板内容')
         }
