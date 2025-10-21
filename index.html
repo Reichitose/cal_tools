@@ -8,7 +8,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2024.9.12 更新了二期加氯，重构了识别（现在水量会自动被分配到56，更换了加氯数据输出的格式</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2025.10.21 修改加药计算方式，翻新功能</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -18,31 +18,30 @@
     <p>
         一二系列进水量： <input type="number" id="12" placeholder="请输入一二系列的总进水量"><br />
         三四系列进水量： <input type="number" id="34" placeholder="请输入三四系列的总进水量"><br />
-        五系列进水量： <input type="number" id="5" placeholder="请输入五系列的总进水量"><br/>
-        六系列进水量： <input type="number" id="6" placeholder="请输入六系列的总进水量">
+        五六系列进水量： <input type="number" id="56" placeholder="请输入五系列的总进水量"><br/>
     </p>
     <hr>
     <h2>加药计算部分</h2>
     <h3>一期</h3>
-    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="10"
+    <h4>浓度按照混凝剂<input type="number" value="20" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="8"
             style="width: 50px;" id="zn_con">%计算</h4>
     <hr>
 
     <p>
-        A系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_adiff"><br />
-        B系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_bdiff"><br />
-        C系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_cdiff"><br />
-        D系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ddiff"><br />
+        1系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_adiff"><br />
+        2系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_bdiff"><br />
+        3系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_cdiff"><br />
+        4系列混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ddiff"><br />
     </p>
     <br>
     <p>
-        A系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_adiff"><br />
-        B系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_bdiff"><br />
-        C系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_cdiff"><br />
-        D系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ddiff"><br />
+        1系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_adiff"><br />
+        2系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_bdiff"><br />
+        3系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_cdiff"><br />
+        4系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ddiff"><br />
     </p>
     <h3>二期</h3>
-    <h4>浓度按照混凝剂<input type="number" value="15" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
+    <h4>浓度按照混凝剂<input type="number" value="16" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
         style="width: 50px;" id="zn_con2">%计算</h4>
     5-1混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff1"><br />
     5-2混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff2"><br />
@@ -124,6 +123,8 @@
     // 2024.9.11 更新二期加药
     // 2024.9.12 更新了二期加氯，重构了识别（现在水量会自动被分配到56，更换了加氯数据输出的格式
 
+    //2025.10.21 修改加药计算方式，翻新功能
+
 
     // -- TODO LIST
     // 班耗&总耗
@@ -144,8 +145,8 @@
     function do_cal() {
         var ab = parseInt(document.getElementById("12").value);
         var cd = parseInt(document.getElementById("34").value);
-        var e = parseInt(document.getElementById("5").value);
-        var f = parseInt(document.getElementById("6").value);
+        var ef = parseInt(document.getElementById("56").value);
+
 
         hn_concen = parseFloat(document.getElementById("hn_con").value) / 100;
         hn_concen2 = parseFloat(document.getElementById("hn_con2").value) / 100;
@@ -178,11 +179,11 @@
         var hn_b = (hn_bdiff * hn_concen * 2 * 10000 / ab).toFixed(2);
         var hn_c = (hn_cdiff * hn_concen * 2 * 10000 / cd).toFixed(2);
         var hn_d = (hn_ddiff * hn_concen * 2 * 10000 / cd).toFixed(2);
-        var hn_e1 = (hn_ediff1 * hn_concen2 * 2  * 10000 / e).toFixed(2);
-        var hn_e2 = (hn_ediff2 * hn_concen2 * 2 * 10000 / e).toFixed(2);
+        var hn_e1 = (hn_ediff1 * hn_concen2 * 4  * 10000 / ef).toFixed(2);
+        var hn_e2 = (hn_ediff2 * hn_concen2 * 4 * 10000 / ef).toFixed(2);
 
-        var hn_f1 = (hn_fdiff1 * hn_concen2 * 2  * 10000 / f).toFixed(2);
-        var hn_f2 = (hn_fdiff2 * hn_concen2 * 2  * 10000 / f).toFixed(2);
+        var hn_f1 = (hn_fdiff1 * hn_concen2 * 4  * 10000 / ef).toFixed(2);
+        var hn_f2 = (hn_fdiff2 * hn_concen2 * 4  * 10000 / ef).toFixed(2);
 
 
 
@@ -190,10 +191,10 @@
         var zn_b = (zn_bdiff * zn_concen * 2 * 10000 / ab).toFixed(2);
         var zn_c = (zn_cdiff * zn_concen * 2 * 10000 / cd).toFixed(2);
         var zn_d = (zn_ddiff * zn_concen * 2 * 10000 / cd).toFixed(2);
-        var zn_e1 = (zn_ediff1 * zn_concen2 * 2  * 10000 / e).toFixed(2);
-        var zn_e2 = (zn_ediff2 * zn_concen2 * 2  * 10000 / e).toFixed(2);
-        var zn_f1 = (zn_fdiff1 * zn_concen2 * 2 * 10000 / f).toFixed(2);
-        var zn_f2 = (zn_fdiff2 * zn_concen2 * 2  * 10000 / f).toFixed(2);
+        var zn_e1 = (zn_ediff1 * zn_concen2 * 4 * 10000 / ef).toFixed(2);
+        var zn_e2 = (zn_ediff2 * zn_concen2 * 4 * 10000 / ef).toFixed(2);
+        var zn_f1 = (zn_fdiff1 * zn_concen2 * 4 * 10000 / ef).toFixed(2);
+        var zn_f2 = (zn_fdiff2 * zn_concen2 * 4 * 10000 / ef).toFixed(2);
 
         document.getElementById("result").value = "一期：\n" +hn_a + " " + hn_b + " " + hn_c + " " + hn_d + "\n" + zn_a + " " + zn_b + " " + zn_c + " " + zn_d+ "\n" + "二期：\n" + hn_e1 + " " + hn_e2 + " " + hn_f1 + " " + hn_f2 + "\n"+ zn_e1 + " " + zn_e2 + " " + zn_f1 + " " + zn_f2;
     }
@@ -256,6 +257,7 @@
         alert("复制加药数据成功！");
     }
 
+
     function copy_() {
         document.getElementById("result_").select();
         document.execCommand('copy');
@@ -270,10 +272,9 @@
         【一期：14NTU】
         【二期：11NTU】
         进厂水量：16107m³
-        【1-2系：7185】
-        【3-4系：7145】
-        【5-6系：1777】
-        【7-8系：0m³】
+        【1-2系: 7185】
+        【3-4系: 7145】
+        【5-6系: 1777】
 
         沉后浊度：
         【1系：0.91NTU】
@@ -305,9 +306,9 @@
         const text = document.getElementById('hiddenTxt').value
         
         console.log('succ', text)
-        const pattern = /(?<=【1-2系：】)\d+/g;
-        const pattern_ = /(?<=【3-4系：】)\d+/g;
-        const pattern__ = /(?<=【5-6系：】)\d+/g;
+        const pattern = /(?<=【1-2系: 】)\d+/g;
+        const pattern_ = /(?<=【3-4系: 】)\d+/g;
+        const pattern__ = /(?<=【5-6系: 】)\d+/g;
         console.log(pattern + pattern_ + pattern__)
         const match = text.match(pattern)
         const match_ = text.match(pattern_)
@@ -320,8 +321,7 @@
             //将值注入
             document.getElementById('12').value = valAB
             document.getElementById('34').value = valCD
-            document.getElementById('5').value = valEF/2
-            document.getElementById('6').value = valEF/2
+            document.getElementById('56').value = valEF
             
         } else {
             alert('读取失败，请检查剪贴板内容')
