@@ -9,7 +9,7 @@
 </head>
 
 <body class="layui-bg-gray">
-    <marquee style="font-size: 18px;background-color: aqua;">2025.10.21 修改加药计算方式，翻新功能</marquee>
+    <marquee style="font-size: 18px;background-color: aqua;">2025.11.15 变更浓度</marquee>
     <h2>⚠️ 输入的差值均为无视小数点后的整数</h2>
     <!--可能窄了点但是问题不大-->
     <hr>
@@ -24,7 +24,7 @@
     <hr>
     <h2>加药计算部分</h2>
     <h3>一期</h3>
-    <h4>浓度按照混凝剂<input type="number" value="20" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="8"
+    <h4>浓度按照混凝剂<input type="number" value="10" style="width: 40px;" id="hn_con">%，助凝剂<input type="number" value="5"
             style="width: 50px;" id="zn_con">%计算</h4>
     <hr>
 
@@ -42,7 +42,7 @@
         4系列助凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="ZN_ddiff"><br />
     </p>
     <h3>二期</h3>
-    <h4>浓度按照混凝剂<input type="number" value="16" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
+    <h4>浓度按照混凝剂<input type="number" value="10" style="width: 40px;" id="hn_con2">%，助凝剂<input type="number" value="5"
             style="width: 50px;" id="zn_con2">%计算</h4>
     5-1混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff1"><br />
     5-2混凝剂与上个时段的差值：<input type="number" style="width: 60px;" id="HN_ediff2"><br />
@@ -125,6 +125,7 @@
     // 2024.9.12 更新了二期加氯，重构了识别（现在水量会自动被分配到56，更换了加氯数据输出的格式
 
     //2025.10.21 修改加药计算方式，翻新功能
+    //2025.11.15 变更浓度
 
 
     // -- TODO LIST
